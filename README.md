@@ -10,3 +10,10 @@
 
 # 通过streamlit启动本项目
 * 运行命令：streamlit run MoMoChat.py
+
+
+# 20240107日志记录（文档问答相关）
+* 待完成的功能点：
+    * 1. 添加 pdf preview 功能
+    * 2. 添加回答后的resouce，以及对应的page number
+    # 3. 

@@ -1,4 +1,5 @@
 import os
+import base64
 import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
@@ -55,7 +56,7 @@ def get_documents_texts(documents):
 def get_text_chunks(doc_texts):
     text_splitter = CharacterTextSplitter(
         separator="\n",
-        chunk_size=1000,
+        chunk_size=500,
         chunk_overlap=200,
         length_function=len,
     )
@@ -99,15 +100,15 @@ user_question = st.chat_input("Ask a question about your documents:")
 if user_question:
     handle_userinput(user_question)
 
-
 with st.sidebar:
     st.subheader("MultiDocument Chat Introduction")
 
     documents = st.file_uploader(
         "Upload your PDFs here and click on Process.",
         type="pdf",
-        accept_multiple_files=True,
+        # accept_multiple_files=True,
     )
+    st.session_state.documents = documents
     if st.button("Process"):
         with st.spinner("Processing..."):
             # 1. get all documents
