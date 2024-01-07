@@ -1,0 +1,17 @@
+credentials:
+  usernames:
+    jy007:
+      email: ""
+      name: jie yuan
+      password: $2b$12$QhYIwOcBlXktkyBjV2TQ/uD6rJvN5Hg8IBKWJdANzJ0LDxXCeIru6 # To be replaced with hashed password
+    Psyduck:
+      email: ""
+      name: Psyduck Dong
+      password: $2b$12$QhYIwOcBlXktkyBjV2TQ/uD6rJvN5Hg8IBKWJdANzJ0LDxXCeIru6 # To be replaced with hashed password
+cookie:
+  expiry_days: 30
+  key: random_signature_key # Must be string
+  name: random_cookie_name
+preauthorized:
+  emails:
+  - ""
