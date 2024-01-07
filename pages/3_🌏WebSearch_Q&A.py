@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.retrievers.web_research import WebResearchRetriever
-
+from utils import login_auth
 import os
 
 st.set_page_config(page_title="LLM Based Web Search", page_icon="🌐")
@@ -97,38 +97,43 @@ class PrintRetrievalHandler(BaseCallbackHandler):
             self.container.text(doc.page_content)
 
 
-# st.sidebar.image("img/ai.png")
-st.header("`Interweb Explorer`")
-st.info(
-    "`I am an AI that can answer questions by exploring, reading, and summarizing web pages."
-    "I can be configured to use different modes: public API or private (no data sharing).`"
-)
+def run_page():
 
-# Make retriever and llm
-if "retriever" not in st.session_state:
-    st.session_state["retriever"], st.session_state["llm"] = settings()
-web_retriever = st.session_state.retriever
-llm = st.session_state.llm
-
-# User input
-question = st.text_input("`Ask a question:`")
-
-if question:
-    # Generate answer (w/ citations)
-    import logging
-
-    logging.basicConfig()
-    logging.getLogger("langchain.retrievers.web_research").setLevel(logging.INFO)
-    qa_chain = RetrievalQAWithSourcesChain.from_chain_type(
-        llm, chain_type="stuff", retriever=web_retriever
+    # st.sidebar.image("img/ai.png")
+    st.header("`Interweb Explorer`")
+    st.info(
+        "`I am an AI that can answer questions by exploring, reading, and summarizing web pages."
+        "I can be configured to use different modes: public API or private (no data sharing).`"
     )
 
-    # Write answer and sources
-    retrieval_streamer_cb = PrintRetrievalHandler(st.container())
-    answer = st.empty()
-    stream_handler = StreamHandler(answer, initial_text="`Answer:`\n\n")
-    result = qa_chain(
-        {"question": question}, callbacks=[retrieval_streamer_cb, stream_handler]
-    )
-    answer.info("`Answer:`\n\n" + result["answer"])
-    st.info("`Sources:`\n\n" + result["sources"])
+    # Make retriever and llm
+    if "retriever" not in st.session_state:
+        st.session_state["retriever"], st.session_state["llm"] = settings()
+    web_retriever = st.session_state.retriever
+    llm = st.session_state.llm
+
+    # User input
+    question = st.text_input("`Ask a question:`")
+
+    if question:
+        # Generate answer (w/ citations)
+        import logging
+
+        logging.basicConfig()
+        logging.getLogger("langchain.retrievers.web_research").setLevel(logging.INFO)
+        qa_chain = RetrievalQAWithSourcesChain.from_chain_type(
+            llm, chain_type="stuff", retriever=web_retriever
+        )
+
+        # Write answer and sources
+        retrieval_streamer_cb = PrintRetrievalHandler(st.container())
+        answer = st.empty()
+        stream_handler = StreamHandler(answer, initial_text="`Answer:`\n\n")
+        result = qa_chain(
+            {"question": question}, callbacks=[retrieval_streamer_cb, stream_handler]
+        )
+        answer.info("`Answer:`\n\n" + result["answer"])
+        st.info("`Sources:`\n\n" + result["sources"])
+
+
+login_auth(title="`Interweb Explorer`",func=run_page)
